@@ -73,69 +73,80 @@ $pdo = encerrar();
 ?>
 
 
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
     <title>Tischler's Hotel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="estilos.css">
 </head>
 
-<body>
-    <h1>Tischler's Hotel</h1>
-    <h2>Cadastro de Hóspede</h2>
-    <form action="cadastro.php" method="post">
-        <label>CPF:</label>
-        <input type="text" name="cpf" value="<?php echo $cpf; ?>" required>
-        <input type="submit" name="buscar" value="Buscar Dados"><br><br>
+<body class="d-flex flex-column justify-content-center align-items-center vh-100 text-center">
+    
+    <h1 class="mb-3">Tischler's Hotel</h1>
+    <h2 class="mb-4">Cadastro de Hóspede</h2>
 
-        <label>Nome:</label>
-        <input type="text" name="nome" value="<?php echo $nome; ?>"><br><br>
+    <div class="menu-container">
+        <form action="cadastro.php" method="post">
+            <label>CPF:</label>
+            <input type="text" name="cpf" value="<?php echo $cpf; ?>" required class="form-control mb-3">
+            <input type="submit" name="buscar" value="Buscar Dados" class="btn menu-btn mb-4">
 
-        <label>Sobrenome:</label>
-        <input type="text" name="sobrenome" value="<?php echo $sobrenome; ?>"><br><br>
+            <label>Nome:</label>
+            <input type="text" name="nome" value="<?php echo $nome; ?>" class="form-control mb-3">
 
-        <label>Sexo:</label>
-        <select name="sexo">
-            <option value="M" <?php echo ($sexo == 'M') ? 'selected' : ''; ?>>Masculino</option>
-            <option value="F" <?php echo ($sexo == 'F') ? 'selected' : ''; ?>>Feminino</option>
-        </select><br><br>
+            <label>Sobrenome:</label>
+            <input type="text" name="sobrenome" value="<?php echo $sobrenome; ?>" class="form-control mb-3">
 
-        <label>Data de Nascimento:</label>
-        <input type="date" name="dataNascimento" value="<?php echo $dataNascimento; ?>"><br><br>
+            <label>Sexo:</label>
+            <select name="sexo" class="form-select mb-3">
+                <option value="M" <?php echo ($sexo == 'M') ? 'selected' : ''; ?>>Masculino</option>
+                <option value="F" <?php echo ($sexo == 'F') ? 'selected' : ''; ?>>Feminino</option>
+            </select>
 
-        <h3>País de Origem</h3>
-        <input type="radio" name="paisOrigem" value="Brasil"> Brasil<br>
-        <input type="radio" name="paisOrigem" value="Argentina"> Argentina<br>
-        <input type="radio" name="paisOrigem" value="Paraguai"> Paraguai<br>
-        <input type="radio" name="paisOrigem" value="Uruguai"> Uruguai<br>
-        <input type="radio" name="paisOrigem" value="Chile"> Chile<br>
-        <input type="radio" name="paisOrigem" value="Peru"> Peru<br><br>
+            <label>Data de Nascimento:</label>
+            <input type="date" name="dataNascimento" value="<?php echo $dataNascimento; ?>" class="form-control mb-3">
 
-        <h3>Previsão de Dias de Estadia</h3>
-        <select name="previsaoEstadia">
-            <option value="3 dias">3 dias</option>
-            <option value="5 dias">5 dias</option>
-            <option value="1 semana">1 semana</option>
-            <option value="2 semanas">2 semanas</option>
-            <option value="3 semanas ou mais">3 semanas ou mais</option>
-        </select><br><br>
+            <h3>País de Origem</h3>
+            <div class="mb-3">
+                <input type="radio" name="paisOrigem" value="Brasil"> Brasil
+                <input type="radio" name="paisOrigem" value="Argentina"> Argentina
+                <input type="radio" name="paisOrigem" value="Paraguai"> Paraguai
+                <input type="radio" name="paisOrigem" value="Uruguai"> Uruguai
+                <input type="radio" name="paisOrigem" value="Chile"> Chile
+                <input type="radio" name="paisOrigem" value="Peru"> Peru
+            </div>
 
-        <h3>Companhias Aéreas Já Utilizadas</h3>
-        <input type="checkbox" name="ciasAereas[]" value="GOL"> GOL<br>
-        <input type="checkbox" name="ciasAereas[]" value="AZUL"> AZUL<br>
-        <input type="checkbox" name="ciasAereas[]" value="TRIP"> TRIP<br>
-        <input type="checkbox" name="ciasAereas[]" value="AVIANCA"> AVIANCA<br>
-        <input type="checkbox" name="ciasAereas[]" value="RISSETTI"> RISSETTI<br>
-        <input type="checkbox" name="ciasAereas[]" value="GLOBAL"> GLOBAL<br><br>
+            <h3>Previsão de Dias de Estadia</h3>
+            <select name="previsaoEstadia" class="form-select mb-3">
+                <option value="3 dias">3 dias</option>
+                <option value="5 dias">5 dias</option>
+                <option value="1 semana">1 semana</option>
+                <option value="2 semanas">2 semanas</option>
+                <option value="3 semanas ou mais">3 semanas ou mais</option>
+            </select>
 
-        <input type="submit" name="cadastrar" value="Cadastrar Reserva">
-    </form>
+            <h3>Companhias Aéreas Já Utilizadas</h3>
+            <div class="mb-3">
+                <input type="checkbox" name="ciasAereas[]" value="GOL"> GOL
+                <input type="checkbox" name="ciasAereas[]" value="AZUL"> AZUL
+                <input type="checkbox" name="ciasAereas[]" value="TRIP"> TRIP
+                <input type="checkbox" name="ciasAereas[]" value="AVIANCA"> AVIANCA
+                <input type="checkbox" name="ciasAereas[]" value="RISSETTI"> RISSETTI
+                <input type="checkbox" name="ciasAereas[]" value="GLOBAL"> GLOBAL
+            </div>
 
-    <form name="voltar" method="post" action="index.php">
-        <input type="submit" name="voltar" value="Voltar">
-    </form>
+            <input type="submit" name="cadastrar" value="Cadastrar Reserva" class="btn menu-btn">
+
+        </form>
+
+        <form name="voltar" method="post" action="index.php">
+            <input type="submit" name="voltar" value="Voltar" class="btn menu-btn mt-3">
+        </form>
+    </div>
+
 </body>
 
 </html>

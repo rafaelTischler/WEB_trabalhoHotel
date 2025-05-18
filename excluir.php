@@ -1,6 +1,8 @@
 <?php
 include 'conexao.php';
 
+$mensagem = "";
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $cpf = $_POST["cpf"];
     $excluirHospede = isset($_POST["excluir_hospede"]); // Verifica se deseja excluir o hóspede também
@@ -8,23 +10,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conexao = conectar();
 
     try {
-        // Excluir todas as reservas do hóspede na tabela controle
-        $sqlControle = "DELETE FROM controle WHERE hospedeCpf = ?";
-        $stmtControle = $conexao->prepare($sqlControle);
-        $stmtControle->execute([$cpf]);
+        $sqlVerifica = "SELECT COUNT(*) AS total FROM controle WHERE hospedeCpf = ?";
+        $stmtVerifica = $conexao->prepare($sqlVerifica);
+        $stmtVerifica->execute([$cpf]);
+        $resultado = $stmtVerifica->fetch(PDO::FETCH_ASSOC);
+        $quantReservas = $resultado["total"];
 
-        // Se o operador escolheu excluir o hóspede, remove-o da tabela hospede
-        if ($excluirHospede) {
+        if ($quantReservas > 0) {
+            $sqlControle = "DELETE FROM controle WHERE hospedeCpf = ?";
+            $stmtControle = $conexao->prepare($sqlControle);
+            $stmtControle->execute([$cpf]);
+            $mensagem = "Reserva excluída com sucesso!";
+        } else {
+            $mensagem = "Esse hóspede não tem reservas!";
+        }
+
+        if ($excluirHospede && $quantReservas == 0) {
             $sqlHospede = "DELETE FROM hospede WHERE cpf = ?";
             $stmtHospede = $conexao->prepare($sqlHospede);
             $stmtHospede->execute([$cpf]);
-
-            echo "<p>Reserva e hóspede excluídos com sucesso!</p>";
-        } else {
-            echo "<p>Reserva excluída com sucesso!</p>";
+            $mensagem = "Reserva e hóspede excluídos com sucesso!";
         }
     } catch (PDOException $e) {
-        echo "<p>Erro ao excluir: " . $e->getMessage() . "</p>";
+        $mensagem = "Erro ao excluir: " . $e->getMessage();
     }
 
     $conexao = encerrar();
@@ -33,24 +41,88 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <title>Excluir Reserva</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="estilos.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url("img/fundo_excluir.jpg");
+            background-size: cover;
+            background-position: center;
+        }
+
+        .menu-btn,
+        .btn-custom {
+            max-width: 250px;
+            width: 50%;
+            background-color: rgba(171, 131, 81, 0.5) !important;
+            color: white !important;
+            border: none !important;
+        }
+
+        .menu-btn:hover,
+        .btn-custom:hover {
+            background-color: rgba(235, 193, 141, 0.5) !important;
+        }
+
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .mensagem-feedback {
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding: 10px 20px;
+            border-radius: 6px;
+            max-width: 500px;
+            margin: 20px auto 0;
+        }
+    </style>
 </head>
-<body>
-    <h2>Excluir Reserva</h2>
-    <form action="excluir.php" method="post">
-        <label>CPF do Hóspede:</label>
-        <input type="text" name="cpf" required><br><br>
 
-        <label>Excluir hóspede caso não tenha mais reservas?</label>
-        <input type="checkbox" name="excluir_hospede" value="sim"> Sim<br><br>
+<body class="d-flex flex-column justify-content-center align-items-center min-vh-100">
 
-        <input type="submit" value="Excluir Reserva">
-    </form>
-    <br>
-    <form name="voltar" method="post" action="index.php">
-        <input type="submit" name="voltar" value="Voltar">
-    </form>
+    <div class="form-container">
+        <h2 class="text-center form-title mb-4">Excluir Reserva</h2>
+
+        <form action="excluir.php" method="post">
+            <div class="mb-3">
+                <label for="cpf" class="form-label">CPF do Hóspede</label>
+                <input type="text" name="cpf" id="cpf" required class="form-control">
+            </div>
+
+            <div class="form-check mb-3">
+                <input type="checkbox" name="excluir_hospede" value="sim" class="form-check-input" id="excluirHospede">
+                <label class="form-check-label" for="excluirHospede">
+                    Excluir hóspede caso não tenha mais reservas?
+                </label>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-custom">Excluir Reserva</button>
+            </div>
+        </form>
+
+        <form method="post" action="index.php" class="text-center mt-3">
+            <button type="submit" name="voltar" class="btn btn-custom">Voltar</button>
+        </form>
+    </div>
+
+    <?php if (!empty($mensagem)) : ?>
+        <div class="mensagem-feedback">
+            <?= $mensagem ?>
+        </div>
+    <?php endif; ?>
+
 </body>
+
 </html>

@@ -1,0 +1,20 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.form-container {
+    max-width: 600px;
+    width: 90%;
+    background-color: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.form-title {
+    color: #343a40;
+}
+
+.btn-custom {
+    width: 100%;
+}
