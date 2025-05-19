@@ -7,13 +7,14 @@
             background-image: url("img/fundo_consultar.jpg");
         }
     </style>
+
     <meta charset="UTF-8">
     <title>Consultar Hóspedes</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="estilos.css" rel="stylesheet">
 </head>
 
-<body class="d-flex flex-column align-items-center min-vh-100 pt-5">
+<body class="d-flex flex-column align-items-center ">
 
     <div class="form-container">
         <h2 class="text-center form-title mb-4">Consultar Hóspedes</h2>
@@ -37,20 +38,20 @@
     </div>
 
     <!-- Área dos resultados -->
-    <div class="mt-4 mb-5">
+    <div class="form-container">
         <?php
         include 'conexao.php';
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (isset($_POST['listar_todos'])) {
-                echo '<div class="container mt-4 mb-5">';
+                echo '<div class="container  ">';
                 listar_todosHospedes();
                 echo '</div>';
             }
 
             if (isset($_POST['listar_cpf'])) {
-                echo '<div class="container mt-4 mb-5">';
+                echo '<div class="container  ">';
                 listar_hospedeCPF($_POST['cpf']);
                 echo '</div>';
             }
@@ -65,9 +66,9 @@
             $hospedes = $pstmt->fetchAll();
 
             if (count($hospedes) > 0) {
-                echo "<h4 class='mt-4'>Lista de Hóspedes</h4>
+                echo "<h4 class=''>Lista de Hóspedes</h4>
                       <div class='table-responsive'>
-                      <table class='table mt-3'>
+                      <table class='table '>
                             <tr>
                                 <th>CPF</th>
                                 <th>Nome</th>
@@ -90,7 +91,7 @@
 
                 echo "</tbody></table></div>";
             } else {
-                echo "<div class='alert alert-warning mt-4'>Nenhum hóspede encontrado.</div>";
+                echo "<div class='alert alert-warning '>Nenhum hóspede encontrado.</div>";
             }
 
             encerrar();
@@ -104,11 +105,11 @@
             $pstmt->execute([$cpf]);
             $reservas = $pstmt->fetchAll();
 
-            echo "<h4 class='mt-4'>Reservas do Hóspede - CPF: $cpf</span></h4>";
+            echo "<h4 class=''>Reservas do Hóspede - CPF: $cpf</span></h4>";
 
             if (count($reservas) > 0) {
                 echo "<div class='table-responsive'>
-                      <table class='table mt-3'>
+                      <table class='table '>
                             <tr>
                                 <th>País de Origem</th>
                                 <th>Previsão de Estadia</th>
@@ -127,7 +128,7 @@
 
                 echo "</tbody></table></div>";
             } else {
-                echo "<div class='alert mt-3'>Este hóspede não possui reservas registradas.</div>";
+                echo "<div class='alert '>Este hóspede não possui reservas registradas.</div>";
             }
 
             encerrar();

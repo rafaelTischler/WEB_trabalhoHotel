@@ -42,13 +42,12 @@ label,
 }
 
 .form-container {
+    color: white;
     text-align: center;
     max-width: 600px;
     width: 90%;
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(0, 0, 0, 0.45);
     padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
 .menu-btn,
