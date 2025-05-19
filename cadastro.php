@@ -66,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $mensagem = "Reserva cadastrada com sucesso!";
             }
         } catch (PDOException $e) {
-            echo "<p>Erro ao cadastrar: " . $e->getMessage() . "</p>";
+            $mensagem = "Erro ao cadastrar: " . $e->getMessage() . "";
         }
     }
 }
@@ -95,9 +95,9 @@ $pdo = encerrar();
 
 </head>
 
-<body class="d-flex flex-column justify-content-center align-items-center vh-100 text-center">
-    <div class="form-container">
-        <h2 class="mb-4">Cadastro de Hóspede</h2>
+<body class="d-flex flex-column justify-content-center align-items-center vh-100 text-center" style="color: white;">
+    <div class="menu-container">
+        <h3 class="mb-4">Cadastro de Hóspede</h3>
         <form action="cadastro.php" method="post">
             <div class="row mb-3 align-items-end">
                 <div class="col-md-8">
@@ -136,7 +136,7 @@ $pdo = encerrar();
 
             <!-- O restante do formulário continua igual -->
 
-            <h3>País de Origem</h3>
+            <h5>País de Origem</h5>
             <div class="mb-3">
                 <label class="me-2"><input type="radio" name="paisOrigem" value="Brasil"> Brasil</label>
                 <label class="me-2"><input type="radio" name="paisOrigem" value="Argentina"> Argentina</label>
@@ -146,7 +146,7 @@ $pdo = encerrar();
                 <label class="me-2"><input type="radio" name="paisOrigem" value="Peru"> Peru</label>
             </div>
 
-            <h3>Previsão de Dias de Estadia</h3>
+            <h5>Previsão de Dias de Estadia</h5>
             <div class="mb-3">
                 <select name="previsaoEstadia" class="form-select">
                     <option value="3 dias">3 dias</option>
@@ -157,7 +157,7 @@ $pdo = encerrar();
                 </select>
             </div>
 
-            <h3>Companhias Aéreas Já Utilizadas</h3>
+            <h5>Companhias Aéreas Já Utilizadas</h5>
             <div class="mb-4">
                 <label class="me-2"><input type="checkbox" name="ciasAereas[]" value="GOL"> GOL</label>
                 <label class="me-2"><input type="checkbox" name="ciasAereas[]" value="AZUL"> AZUL</label>

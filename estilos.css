@@ -7,7 +7,21 @@ body {
     min-height: 100vh;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+label,
+.form-label,
+.mensagem-feedback {
+    color: white !important;
+}
+
 .menu-container {
+    color: white;
     max-width: 70%;
     width: 500px;
     height: 100%;
