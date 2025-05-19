@@ -4,54 +4,9 @@
 <head>
     <style>
         body {
-            color: black;
             background-image: url("img/fundo_consultar.jpg");
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
-        }
-
-        .container {
-            width: 100%;
-      
-            background-color: rgba(255, 255, 255, 0.6);
-            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
-            margin-top: 20px;
-        }
-
-        .form-container {
-            background-color: rgba(255, 255, 255, 0.7);
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-            text-align: center;
-        }
-
-        .menu-btn,
-        .btn-custom {
-            max-width: 250px;
-            width: 100%;
-            background-color: rgba(171, 131, 81, 0.8) !important;
-            color: white !important;
-            border: none;
-        }
-
-        .menu-btn:hover,
-        .btn-custom:hover {
-            background-color: rgba(235, 193, 141, 0.8) !important;
-            color: black !important;
-        }
-
-        .form-label {
-            font-weight: bold;
-        }
-
-        input[type="text"] {
-            max-width: 300px;
-            margin: 0 auto;
         }
     </style>
-
     <meta charset="UTF-8">
     <title>Consultar Hóspedes</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">

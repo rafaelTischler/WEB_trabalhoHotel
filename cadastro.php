@@ -1,6 +1,8 @@
 <?php
 include 'conexao.php';
 
+$mensagem = "";
+
 $pdo = conectar();
 
 $cpf = $nome = $sobrenome = $sexo = $dataNascimento = "";
@@ -20,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $sexo = $hospede["sexo"];
             $dataNascimento = $hospede["dataNascimento"];
         } else {
-            echo "<p>Hóspede não encontrado.</p>";
+            $mensagem = "Hóspede não encontrado";
         }
     } elseif (isset($_POST['cadastrar'])) { // CADASTRAR NOVO HÓSPEDE E RESERVA
         $cpf = $_POST["cpf"];
@@ -54,14 +56,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $totalReservas = $stmtVerificaReserva->fetchColumn();
 
             if ($totalReservas > 0) {
-                echo "<p>Erro: Este hóspede já tem uma reserva ativa e não pode fazer outra.</p>";
+                $mensagem = "Este hóspede já tem uma reserva ativa e não pode fazer outra";
             } else {
                 // **4️⃣ Insere a reserva na tabela `controle`**
                 $sqlReserva = "INSERT INTO controle (hospedeCpf, paisOrigem, previsaoEstadia, ciasAereas) VALUES (?, ?, ?, ?)";
                 $stmtReserva = $pdo->prepare($sqlReserva);
                 $stmtReserva->execute([$cpf, $paisOrigem, $previsaoEstadia, $ciasAereas]);
 
-                echo "<p>Reserva cadastrada com sucesso!</p>";
+                $mensagem = "Reserva cadastrada com sucesso!";
             }
         } catch (PDOException $e) {
             echo "<p>Erro ao cadastrar: " . $e->getMessage() . "</p>";
@@ -72,7 +74,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $pdo = encerrar();
 ?>
 
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -81,72 +82,108 @@ $pdo = encerrar();
     <title>Tischler's Hotel</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="estilos.css">
+    <style>
+        body {
+            background-image: url("img/fundo_cadastro.jpg");
+
+        }
+
+        .menu-container {
+            text-align: start;
+        }
+    </style>
+
 </head>
 
 <body class="d-flex flex-column justify-content-center align-items-center vh-100 text-center">
-    
-    <h1 class="mb-3">Tischler's Hotel</h1>
-    <h2 class="mb-4">Cadastro de Hóspede</h2>
-
-    <div class="menu-container">
+    <div class="form-container">
+        <h2 class="mb-4">Cadastro de Hóspede</h2>
         <form action="cadastro.php" method="post">
-            <label>CPF:</label>
-            <input type="text" name="cpf" value="<?php echo $cpf; ?>" required class="form-control mb-3">
-            <input type="submit" name="buscar" value="Buscar Dados" class="btn menu-btn mb-4">
+            <div class="row mb-3 align-items-end">
+                <div class="col-md-8">
+                    <label>CPF:</label>
+                    <input type="text" name="cpf" value="<?php echo $cpf; ?>" class="form-control">
+                </div>
+                <div class="col-md-4">
+                    <input type="submit" name="buscar" value="Buscar Dados" class="btn menu-btn w-100">
+                </div>
+            </div>
 
-            <label>Nome:</label>
-            <input type="text" name="nome" value="<?php echo $nome; ?>" class="form-control mb-3">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label>Nome:</label>
+                    <input type="text" name="nome" value="<?php echo $nome; ?>" class="form-control">
+                </div>
+                <div class="col-md-6">
+                    <label>Sobrenome:</label>
+                    <input type="text" name="sobrenome" value="<?php echo $sobrenome; ?>" class="form-control">
+                </div>
+            </div>
 
-            <label>Sobrenome:</label>
-            <input type="text" name="sobrenome" value="<?php echo $sobrenome; ?>" class="form-control mb-3">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label>Sexo:</label>
+                    <select name="sexo" class="form-select">
+                        <option value="M" <?php echo ($sexo == 'M') ? 'selected' : ''; ?>>Masculino</option>
+                        <option value="F" <?php echo ($sexo == 'F') ? 'selected' : ''; ?>>Feminino</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label>Data de Nascimento:</label>
+                    <input type="date" name="dataNascimento" value="<?php echo $dataNascimento; ?>" class="form-control">
+                </div>
+            </div>
 
-            <label>Sexo:</label>
-            <select name="sexo" class="form-select mb-3">
-                <option value="M" <?php echo ($sexo == 'M') ? 'selected' : ''; ?>>Masculino</option>
-                <option value="F" <?php echo ($sexo == 'F') ? 'selected' : ''; ?>>Feminino</option>
-            </select>
-
-            <label>Data de Nascimento:</label>
-            <input type="date" name="dataNascimento" value="<?php echo $dataNascimento; ?>" class="form-control mb-3">
+            <!-- O restante do formulário continua igual -->
 
             <h3>País de Origem</h3>
             <div class="mb-3">
-                <input type="radio" name="paisOrigem" value="Brasil"> Brasil
-                <input type="radio" name="paisOrigem" value="Argentina"> Argentina
-                <input type="radio" name="paisOrigem" value="Paraguai"> Paraguai
-                <input type="radio" name="paisOrigem" value="Uruguai"> Uruguai
-                <input type="radio" name="paisOrigem" value="Chile"> Chile
-                <input type="radio" name="paisOrigem" value="Peru"> Peru
+                <label class="me-2"><input type="radio" name="paisOrigem" value="Brasil"> Brasil</label>
+                <label class="me-2"><input type="radio" name="paisOrigem" value="Argentina"> Argentina</label>
+                <label class="me-2"><input type="radio" name="paisOrigem" value="Paraguai"> Paraguai</label>
+                <label class="me-2"><input type="radio" name="paisOrigem" value="Uruguai"> Uruguai</label>
+                <label class="me-2"><input type="radio" name="paisOrigem" value="Chile"> Chile</label>
+                <label class="me-2"><input type="radio" name="paisOrigem" value="Peru"> Peru</label>
             </div>
 
             <h3>Previsão de Dias de Estadia</h3>
-            <select name="previsaoEstadia" class="form-select mb-3">
-                <option value="3 dias">3 dias</option>
-                <option value="5 dias">5 dias</option>
-                <option value="1 semana">1 semana</option>
-                <option value="2 semanas">2 semanas</option>
-                <option value="3 semanas ou mais">3 semanas ou mais</option>
-            </select>
-
-            <h3>Companhias Aéreas Já Utilizadas</h3>
             <div class="mb-3">
-                <input type="checkbox" name="ciasAereas[]" value="GOL"> GOL
-                <input type="checkbox" name="ciasAereas[]" value="AZUL"> AZUL
-                <input type="checkbox" name="ciasAereas[]" value="TRIP"> TRIP
-                <input type="checkbox" name="ciasAereas[]" value="AVIANCA"> AVIANCA
-                <input type="checkbox" name="ciasAereas[]" value="RISSETTI"> RISSETTI
-                <input type="checkbox" name="ciasAereas[]" value="GLOBAL"> GLOBAL
+                <select name="previsaoEstadia" class="form-select">
+                    <option value="3 dias">3 dias</option>
+                    <option value="5 dias">5 dias</option>
+                    <option value="1 semana">1 semana</option>
+                    <option value="2 semanas">2 semanas</option>
+                    <option value="3 semanas ou mais">3 semanas ou mais</option>
+                </select>
             </div>
 
-            <input type="submit" name="cadastrar" value="Cadastrar Reserva" class="btn menu-btn">
-
+            <h3>Companhias Aéreas Já Utilizadas</h3>
+            <div class="mb-4">
+                <label class="me-2"><input type="checkbox" name="ciasAereas[]" value="GOL"> GOL</label>
+                <label class="me-2"><input type="checkbox" name="ciasAereas[]" value="AZUL"> AZUL</label>
+                <label class="me-2"><input type="checkbox" name="ciasAereas[]" value="TRIP"> TRIP</label>
+                <label class="me-2"><input type="checkbox" name="ciasAereas[]" value="AVIANCA"> AVIANCA</label>
+                <label class="me-2"><input type="checkbox" name="ciasAereas[]" value="RISSETTI"> RISSETTI</label>
+                <label class="me-2"><input type="checkbox" name="ciasAereas[]" value="GLOBAL"> GLOBAL</label>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <input type="submit" name="cadastrar" value="Cadastrar Reserva" class="btn menu-btn w-100">
+                </div>
+                <div class="col-md-6">
+                    <a href="index.php" class="btn menu-btn w-100">Voltar</a>
+                </div>
+            </div>
         </form>
 
-        <form name="voltar" method="post" action="index.php">
-            <input type="submit" name="voltar" value="Voltar" class="btn menu-btn mt-3">
-        </form>
     </div>
 
 </body>
+
+<?php if (!empty($mensagem)) : ?>
+    <div class="mensagem-feedback">
+        <?php echo htmlspecialchars($mensagem); ?>
+    </div>
+<?php endif; ?>
 
 </html>

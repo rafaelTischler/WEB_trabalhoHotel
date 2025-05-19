@@ -50,41 +50,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <style>
         body {
             background-image: url("img/fundo_excluir.jpg");
-            background-size: cover;
-            background-position: center;
-        }
-
-        .menu-btn,
-        .btn-custom {
-            max-width: 250px;
-            width: 50%;
-            background-color: rgba(171, 131, 81, 0.5) !important;
-            color: white !important;
-            border: none !important;
-        }
-
-        .menu-btn:hover,
-        .btn-custom:hover {
-            background-color: rgba(235, 193, 141, 0.5) !important;
-        }
-
-        .form-container {
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .mensagem-feedback {
-            color: white;
-            text-align: center;
-            font-weight: bold;
-            font-size: 1.1rem;
-            background-color: rgba(0, 0, 0, 0.4);
-            padding: 10px 20px;
-            border-radius: 6px;
-            max-width: 500px;
-            margin: 20px auto 0;
         }
     </style>
 </head>

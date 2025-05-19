@@ -6,7 +6,7 @@ $pdo = conectar();
 $cpf = $nome = $sobrenome = $sexo = $dataNascimento = $paisOrigem = $previsaoEstadia = $ciasAereas = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['buscar'])) { // BUSCAR DADOS DO HÓSPEDE E RESERVA
+    if (isset($_POST['buscar'])) {
         $cpf = $_POST["cpf"];
 
         $sqlHospede = "SELECT * FROM hospede WHERE cpf = ?";
@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $sexo = $hospede["sexo"];
             $dataNascimento = $hospede["dataNascimento"];
         } else {
-            echo "<p>Hóspede não encontrado.</p>";
+            echo "<p class='text-center text-white mt-3'>Hóspede não encontrado.</p>";
         }
 
         if ($reserva) {
@@ -33,14 +33,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $previsaoEstadia = $reserva["previsaoEstadia"];
             $ciasAereas = $reserva["ciasAereas"];
         }
-    } elseif (isset($_POST['alterar'])) { // ALTERAR DADOS DO HÓSPEDE E RESERVA
+    } elseif (isset($_POST['alterar'])) {
         $cpf = $_POST["cpf"];
         $nome = $_POST["nome"];
         $sobrenome = $_POST["sobrenome"];
         $dataNascimento = $_POST["dataNascimento"];
         $paisOrigem = $_POST["paisOrigem"];
         $previsaoEstadia = $_POST["previsaoEstadia"];
-        $ciasAereas = implode(", ", $_POST["ciasAereas"]);
+        $ciasAereas = isset($_POST["ciasAereas"]) ? implode(", ", $_POST["ciasAereas"]) : "";
 
         try {
             $sqlHospede = "UPDATE hospede SET nome = ?, sobrenome = ?, dataNascimento = ? WHERE cpf = ?";
@@ -51,9 +51,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmtReserva = $pdo->prepare($sqlReserva);
             $stmtReserva->execute([$paisOrigem, $previsaoEstadia, $ciasAereas, $cpf]);
 
-            echo "<p>Dados alterados com sucesso!</p>";
+            echo "<p class='text-center text-white mt-3'>Dados alterados com sucesso!</p>";
         } catch (PDOException $e) {
-            echo "<p>Erro ao alterar dados: " . $e->getMessage() . "</p>";
+            echo "<p class='text-center text-white mt-3'>Erro ao alterar dados: " . $e->getMessage() . "</p>";
         }
     }
 }
@@ -63,56 +63,104 @@ $pdo = encerrar();
 
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <title>Alterar Dados</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="estilos.css">
+    <style>
+        body {
+            background-image: url("img/fundo_excluir.jpg");
+        }
+    </style>
 </head>
-<body>
-    <h1>Alterar Dados do Hóspede e da Reserva</h1>
-    <form action="alterar.php" method="post">
-        <label>CPF:</label>
-        <input type="text" name="cpf" value="<?php echo $cpf; ?>" required>
-        <input type="submit" name="buscar" value="Buscar Dados"><br><br>
 
-        <label>Nome:</label>
-        <input type="text" name="nome" value="<?php echo $nome; ?>"><br><br>
+<body class="d-flex justify-content-center align-items-center">
+    <div class="form-container">
+        <h2 class="text-center form-title mb-4 mt-4">Alterar Dados</h2>
 
-        <label>Sobrenome:</label>
-        <input type="text" name="sobrenome" value="<?php echo $sobrenome; ?>"><br><br>
+        <form action="alterar.php" method="post">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="cpf" class="form-label">CPF:</label>
+                    <input type="text" name="cpf" id="cpf" class="form-control" value="<?php echo $cpf; ?>" required>
+                </div>
+                <div class="col-md-6 d-flex align-items-end">
+                    <button type="submit" name="buscar" class="btn btn-custom w-100">Buscar Dados</button>
+                </div>
+            </div>
 
-        <label>Data de Nascimento:</label>
-        <input type="date" name="dataNascimento" value="<?php echo $dataNascimento; ?>"><br><br>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Nome:</label>
+                    <input type="text" name="nome" class="form-control" value="<?php echo $nome; ?>">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Sobrenome:</label>
+                    <input type="text" name="sobrenome" class="form-control" value="<?php echo $sobrenome; ?>">
+                </div>
+            </div>
 
-        <h3>País de Origem</h3>
-        <input type="radio" name="paisOrigem" value="Brasil" <?php echo ($paisOrigem == "Brasil") ? "checked" : ""; ?>> Brasil<br>
-        <input type="radio" name="paisOrigem" value="Argentina" <?php echo ($paisOrigem == "Argentina") ? "checked" : ""; ?>> Argentina<br>
-        <input type="radio" name="paisOrigem" value="Paraguai" <?php echo ($paisOrigem == "Paraguai") ? "checked" : ""; ?>> Paraguai<br>
-        <input type="radio" name="paisOrigem" value="Uruguai" <?php echo ($paisOrigem == "Uruguai") ? "checked" : ""; ?>> Uruguai<br>
-        <input type="radio" name="paisOrigem" value="Chile" <?php echo ($paisOrigem == "Chile") ? "checked" : ""; ?>> Chile<br>
-        <input type="radio" name="paisOrigem" value="Peru" <?php echo ($paisOrigem == "Peru") ? "checked" : ""; ?>> Peru<br><br>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Data de Nascimento:</label>
+                    <input type="date" name="dataNascimento" class="form-control" value="<?php echo $dataNascimento; ?>">
+                </div>
+            </div>
 
-        <h3>Previsão de Dias de Estadia</h3>
-        <select name="previsaoEstadia">
-            <option value="3 dias" <?php echo ($previsaoEstadia == "3 dias") ? "selected" : ""; ?>>3 dias</option>
-            <option value="5 dias" <?php echo ($previsaoEstadia == "5 dias") ? "selected" : ""; ?>>5 dias</option>
-            <option value="1 semana" <?php echo ($previsaoEstadia == "1 semana") ? "selected" : ""; ?>>1 semana</option>
-            <option value="2 semanas" <?php echo ($previsaoEstadia == "2 semanas") ? "selected" : ""; ?>>2 semanas</option>
-            <option value="3 semanas ou mais" <?php echo ($previsaoEstadia == "3 semanas ou mais") ? "selected" : ""; ?>>3 semanas ou mais</option>
-        </select><br><br>
+            <div class="row mb-3">
+                <!-- País de Origem -->
+                <div class="col-md-6">
+                    <h5 class="mb-2">País de Origem</h5>
+                    <?php
+                    $paises = ["Brasil", "Argentina", "Paraguai", "Uruguai", "Chile", "Peru"];
+                    foreach ($paises as $pais) {
+                        $checked = ($paisOrigem == $pais) ? "checked" : "";
+                        echo "<div class='form-check'>
+                                <input class='form-check-input' type='radio' name='paisOrigem' value='$pais' $checked>
+                                <label class='form-check-label'>$pais</label>
+                              </div>";
+                    }
+                    ?>
+                </div>
 
-        <h3>Companhias Aéreas Já Utilizadas</h3>
-        <input type="checkbox" name="ciasAereas[]" value="GOL" <?php echo (strpos($ciasAereas, "GOL") !== false) ? "checked" : ""; ?>> GOL<br>
-        <input type="checkbox" name="ciasAereas[]" value="AZUL" <?php echo (strpos($ciasAereas, "AZUL") !== false) ? "checked" : ""; ?>> AZUL<br>
-        <input type="checkbox" name="ciasAereas[]" value="TRIP" <?php echo (strpos($ciasAereas, "TRIP") !== false) ? "checked" : ""; ?>> TRIP<br>
-        <input type="checkbox" name="ciasAereas[]" value="AVIANCA" <?php echo (strpos($ciasAereas, "AVIANCA") !== false) ? "checked" : ""; ?>> AVIANCA<br>
-        <input type="checkbox" name="ciasAereas[]" value="RISSETTI" <?php echo (strpos($ciasAereas, "RISSETTI") !== false) ? "checked" : ""; ?>> RISSETTI<br>
-        <input type="checkbox" name="ciasAereas[]" value="GLOBAL" <?php echo (strpos($ciasAereas, "GLOBAL") !== false) ? "checked" : ""; ?>> GLOBAL<br><br>
+                <!-- Companhias Aéreas -->
+                <div class="col-md-6">
+                    <h5 class="mb-2">Companhias Aéreas Já Utilizadas</h5>
+                    <?php
+                    $cias = ["GOL", "AZUL", "TRIP", "AVIANCA", "RISSETTI", "GLOBAL"];
+                    foreach ($cias as $cia) {
+                        $checked = (strpos($ciasAereas, $cia) !== false) ? "checked" : "";
+                        echo "<div class='form-check'>
+                                <input class='form-check-input' type='checkbox' name='ciasAereas[]' value='$cia' $checked>
+                                <label class='form-check-label'>$cia</label>
+                              </div>";
+                    }
+                    ?>
+                </div>
+            </div>
 
-        <input type="submit" name="alterar" value="Alterar Dados">
-    </form>
+            <div class="mb-3">
+                <label class="form-label">Previsão de Dias de Estadia</label>
+                <select name="previsaoEstadia" class="form-select">
+                    <option value="3 dias" <?php echo ($previsaoEstadia == "3 dias") ? "selected" : ""; ?>>3 dias</option>
+                    <option value="5 dias" <?php echo ($previsaoEstadia == "5 dias") ? "selected" : ""; ?>>5 dias</option>
+                    <option value="1 semana" <?php echo ($previsaoEstadia == "1 semana") ? "selected" : ""; ?>>1 semana</option>
+                    <option value="2 semanas" <?php echo ($previsaoEstadia == "2 semanas") ? "selected" : ""; ?>>2 semanas</option>
+                    <option value="3 semanas ou mais" <?php echo ($previsaoEstadia == "3 semanas ou mais") ? "selected" : ""; ?>>3 semanas ou mais</option>
+                </select>
+            </div>
 
-    <form name="voltar" method="post" action="index.php">
-        <input type="submit" name="voltar" value="Voltar">
-    </form>
+            <div class="text-center mb-3">
+                <button type="submit" name="alterar" class="btn btn-custom">Alterar Dados</button>
+            </div>
+        </form>
+
+        <form method="post" action="index.php" class="text-center">
+            <button type="submit" name="voltar" class="btn btn-custom">Voltar</button>
+        </form>
+    </div>
 </body>
+
 </html>
