@@ -1,6 +1,8 @@
 <?php
 include 'conexao.php';
 
+$mensagem = "";
+
 $pdo = conectar();
 
 $cpf = $nome = $sobrenome = $sexo = $dataNascimento = $paisOrigem = $previsaoEstadia = $ciasAereas = "";
@@ -25,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $sexo = $hospede["sexo"];
             $dataNascimento = $hospede["dataNascimento"];
         } else {
-            echo "<p class='text-center text-white mt-3'>Hóspede não encontrado.</p>";
+            $mensagem = "Hóspede não encontrado";
         }
 
         if ($reserva) {
@@ -51,9 +53,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmtReserva = $pdo->prepare($sqlReserva);
             $stmtReserva->execute([$paisOrigem, $previsaoEstadia, $ciasAereas, $cpf]);
 
-            echo "<p class='text-center text-white mt-3'>Dados alterados com sucesso!</p>";
+            $mensagem = "Dados alterados com sucesso!";
         } catch (PDOException $e) {
-            echo "<p class='text-center text-white mt-3'>Erro ao alterar dados: " . $e->getMessage() . "</p>";
+            $mensagem = "Erro ao alterar dados: " . $e->getMessage() . "";
         }
     }
 }
@@ -162,5 +164,11 @@ $pdo = encerrar();
         </form>
     </div>
 </body>
+<?php if (!empty($mensagem)) : ?>
+    <div class="mensagem-feedback">
+        <?php echo htmlspecialchars($mensagem); ?>
+    </div>
+<?php endif; ?>
+
 
 </html>

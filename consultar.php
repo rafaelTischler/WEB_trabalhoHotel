@@ -14,14 +14,14 @@
     <link href="estilos.css" rel="stylesheet">
 </head>
 
-<body class="d-flex flex-column align-items-center ">
+<body class="d-flex flex-column justify-content-center align-items-center vh-100 text-center">
 
-    <div class="form-container">
+    <div class="menu-container">
         <h2 class="text-center form-title mb-4">Consultar Hóspedes</h2>
 
         <!-- Formulário para listar todos -->
         <form action="consultar.php" method="post" class="mb-3">
-            <button type="submit" name="listar_todos" class="btn btn-custom">Listar Todos os Hóspedes</button>
+            <button type="submit" name="listar_todos" class="btn menu-btn w-100">Listar Todos os Hóspedes</button>
 
         </form>
 
@@ -29,31 +29,31 @@
         <form action="consultar.php" method="post" class="mb-3">
             <label for="cpf" class="form-label">Consultar reservas por CPF:</label>
             <input type="text" name="cpf" id="cpf" required class="form-control mb-2">
-            <button type="submit" name="listar_cpf" class="btn btn-custom">Consultar</button>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <button type="submit" name="listar_cpf" class="btn menu-btn w-100">Consultar</button>
+                </div>
+                <div class="col-md-6">
+                    <a href="index.php" class="btn menu-btn w-100">Voltar</a>
+                </div>
+            </div>
         </form>
 
-        <form method="post" action="index.php">
-            <button type="submit" name="voltar" class="btn btn-custom">Voltar</button>
-        </form>
-    </div>
 
-    <!-- Área dos resultados -->
-    <div class="form-container">
+        <!-- Área dos resultados -->
+
         <?php
         include 'conexao.php';
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (isset($_POST['listar_todos'])) {
-                echo '<div class="container  ">';
                 listar_todosHospedes();
-                echo '</div>';
             }
 
             if (isset($_POST['listar_cpf'])) {
-                echo '<div class="container  ">';
                 listar_hospedeCPF($_POST['cpf']);
-                echo '</div>';
             }
         }
 
@@ -66,18 +66,19 @@
             $hospedes = $pstmt->fetchAll();
 
             if (count($hospedes) > 0) {
-                echo "<h4 class=''>Lista de Hóspedes</h4>
-                      <div class='table-responsive'>
-                      <table class='table '>
-                            <tr>
-                                <th>CPF</th>
-                                <th>Nome</th>
-                                <th>Sobrenome</th>
-                                <th>Sexo</th>
-                                <th>Data de Nascimento</th>
-                            </tr>
-                        </thead>
-                        <tbody>";
+                echo "<h4 class='text-white'>Lista de Hóspedes</h4>
+      <div class='table-responsive'>
+      <table class='table tabela-transparente'>
+        <thead>
+            <tr>
+                <th>CPF</th>
+                <th>Nome</th>
+                <th>Sobrenome</th>
+                <th>Sexo</th>
+                <th>Data de Nascimento</th>
+            </tr>
+        </thead>
+        <tbody>";
 
                 foreach ($hospedes as $linha) {
                     echo "<tr>
@@ -105,18 +106,20 @@
             $pstmt->execute([$cpf]);
             $reservas = $pstmt->fetchAll();
 
-            echo "<h4 class=''>Reservas do Hóspede - CPF: $cpf</span></h4>";
 
             if (count($reservas) > 0) {
-                echo "<div class='table-responsive'>
-                      <table class='table '>
-                            <tr>
-                                <th>País de Origem</th>
-                                <th>Previsão de Estadia</th>
-                                <th>Companhias Aéreas Utilizadas</th>
-                            </tr>
-                        </thead>
-                        <tbody>";
+                echo "<h4 class='text-white'>Reservas do Hóspede - CPF: $cpf</h4>
+      <div class='table-responsive'>
+      <table class='table tabela-transparente'>
+        <thead>
+            <tr>
+                <th>País de Origem</th>
+                <th>Previsão de Estadia</th>
+                <th>Companhias Aéreas Utilizadas</th>
+            </tr>
+        </thead>
+        <tbody>";
+
 
                 foreach ($reservas as $linha) {
                     echo "<tr>
@@ -134,8 +137,8 @@
             encerrar();
         }
         ?>
-    </div>
 
+    </div>
 </body>
 
 </html>

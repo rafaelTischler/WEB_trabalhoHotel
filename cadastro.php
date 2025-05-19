@@ -46,7 +46,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $sqlHospede = "INSERT INTO hospede (cpf, nome, sobrenome, sexo, dataNascimento) VALUES (?, ?, ?, ?, ?)";
                 $stmtHospede = $pdo->prepare($sqlHospede);
                 $stmtHospede->execute([$cpf, $nome, $sobrenome, $sexo, $dataNascimento]);
-                echo "<p>Hóspede cadastrado com sucesso!</p>";
             }
 
             // **3️⃣ Verificar se já existe uma reserva ativa**
