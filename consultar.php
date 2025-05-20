@@ -7,7 +7,6 @@
             background-image: url("img/fundo_consultar.jpg");
         }
     </style>
-
     <meta charset="UTF-8">
     <title>Consultar Hóspedes</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -15,21 +14,14 @@
 </head>
 
 <body class="d-flex flex-column justify-content-center align-items-center vh-100 text-center">
-
     <div class="menu-container">
         <h2 class="text-center form-title mb-4">Consultar Hóspedes</h2>
-
-        <!-- Formulário para listar todos -->
         <form action="consultar.php" method="post" class="mb-3">
             <button type="submit" name="listar_todos" class="btn menu-btn w-100">Listar Todos os Hóspedes</button>
-
         </form>
-
-        <!-- Formulário para consultar por CPF -->
         <form action="consultar.php" method="post" class="mb-3">
             <label for="cpf" class="form-label">Consultar reservas por CPF:</label>
             <input type="text" name="cpf" id="cpf" required class="form-control mb-2">
-
             <div class="row">
                 <div class="col-md-6">
                     <button type="submit" name="listar_cpf" class="btn menu-btn w-100">Consultar</button>
@@ -39,24 +31,17 @@
                 </div>
             </div>
         </form>
-
-
-        <!-- Área dos resultados -->
-
+        
         <?php
         include 'conexao.php';
-
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
             if (isset($_POST['listar_todos'])) {
                 listar_todosHospedes();
             }
-
             if (isset($_POST['listar_cpf'])) {
                 listar_hospedeCPF($_POST['cpf']);
             }
         }
-
         function listar_todosHospedes()
         {
             $conexao = conectar();
@@ -64,7 +49,6 @@
             $pstmt = $conexao->prepare($sql);
             $pstmt->execute();
             $hospedes = $pstmt->fetchAll();
-
             if (count($hospedes) > 0) {
                 echo "<h4 class='text-white'>Lista de Hóspedes</h4>
       <div class='table-responsive'>

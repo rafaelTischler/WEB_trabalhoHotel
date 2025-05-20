@@ -7,7 +7,6 @@ function conectar()
     $senha = "";
     return new PDO("mysql:host=$host;dbname=$bd", $usuario, $senha);
 }
-
 function encerrar()
 {
     return null;

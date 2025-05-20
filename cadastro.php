@@ -2,20 +2,16 @@
 include 'conexao.php';
 
 $mensagem = "";
-
 $pdo = conectar();
-
 $cpf = $nome = $sobrenome = $sexo = $dataNascimento = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['buscar'])) { // BUSCAR DADOS DO HÓSPEDE
+    if (isset($_POST['buscar'])) {
         $cpf = $_POST["cpf"];
-
         $sql = "SELECT * FROM hospede WHERE cpf = ?";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$cpf]);
         $hospede = $stmt->fetch();
-
         if ($hospede) {
             $nome = $hospede["nome"];
             $sobrenome = $hospede["sobrenome"];
@@ -24,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $mensagem = "Hóspede não encontrado";
         }
-    } elseif (isset($_POST['cadastrar'])) { // CADASTRAR NOVO HÓSPEDE E RESERVA
+    } elseif (isset($_POST['cadastrar'])) {
         $cpf = $_POST["cpf"];
         $nome = $_POST["nome"];
         $sobrenome = $_POST["sobrenome"];
@@ -33,22 +29,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $paisOrigem = $_POST["paisOrigem"];
         $previsaoEstadia = $_POST["previsaoEstadia"];
         $ciasAereas = implode(", ", $_POST["ciasAereas"]);
-
         try {
-            // **1️⃣ Verifica se o hóspede já está cadastrado**
             $sqlVerifica = "SELECT COUNT(*) FROM hospede WHERE cpf = ?";
             $stmtVerifica = $pdo->prepare($sqlVerifica);
             $stmtVerifica->execute([$cpf]);
             $existeHospede = $stmtVerifica->fetchColumn();
-
-            // **2️⃣ Se o hóspede não estiver cadastrado, insere primeiro na tabela `hospede`**
             if ($existeHospede == 0) {
                 $sqlHospede = "INSERT INTO hospede (cpf, nome, sobrenome, sexo, dataNascimento) VALUES (?, ?, ?, ?, ?)";
                 $stmtHospede = $pdo->prepare($sqlHospede);
                 $stmtHospede->execute([$cpf, $nome, $sobrenome, $sexo, $dataNascimento]);
             }
-
-            // **3️⃣ Verificar se já existe uma reserva ativa**
             $sqlVerificaReserva = "SELECT COUNT(*) FROM controle WHERE hospedeCpf = ?";
             $stmtVerificaReserva = $pdo->prepare($sqlVerificaReserva);
             $stmtVerificaReserva->execute([$cpf]);
@@ -57,7 +47,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($totalReservas > 0) {
                 $mensagem = "Este hóspede já tem uma reserva ativa e não pode fazer outra";
             } else {
-                // **4️⃣ Insere a reserva na tabela `controle`**
                 $sqlReserva = "INSERT INTO controle (hospedeCpf, paisOrigem, previsaoEstadia, ciasAereas) VALUES (?, ?, ?, ?)";
                 $stmtReserva = $pdo->prepare($sqlReserva);
                 $stmtReserva->execute([$cpf, $paisOrigem, $previsaoEstadia, $ciasAereas]);
@@ -69,7 +58,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
-
 $pdo = encerrar();
 ?>
 
@@ -84,7 +72,6 @@ $pdo = encerrar();
     <style>
         body {
             background-image: url("img/fundo_cadastro.jpg");
-
         }
 
         .menu-container {
@@ -96,6 +83,7 @@ $pdo = encerrar();
 
 <body class="d-flex flex-column justify-content-center align-items-center vh-100 text-center" style="color: white;">
     <div class="menu-container">
+
         <h3 class="mb-4">Cadastro de Hóspede</h3>
         <form action="cadastro.php" method="post">
             <div class="row mb-3 align-items-end">
@@ -107,7 +95,6 @@ $pdo = encerrar();
                     <input type="submit" name="buscar" value="Buscar Dados" class="btn menu-btn w-100">
                 </div>
             </div>
-
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label>Nome:</label>
@@ -118,7 +105,6 @@ $pdo = encerrar();
                     <input type="text" name="sobrenome" value="<?php echo $sobrenome; ?>" class="form-control">
                 </div>
             </div>
-
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label>Sexo:</label>
@@ -132,8 +118,6 @@ $pdo = encerrar();
                     <input type="date" name="dataNascimento" value="<?php echo $dataNascimento; ?>" class="form-control">
                 </div>
             </div>
-
-            <!-- O restante do formulário continua igual -->
 
             <h5>País de Origem</h5>
             <div class="mb-3">

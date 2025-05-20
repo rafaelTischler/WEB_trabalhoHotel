@@ -21,7 +21,6 @@
         <a href="consultar.php" class="btn menu-btn mb-2">Consultar</a>
         <a href="excluir.php" class="btn menu-btn">Excluir</a>
     </div>
-
 </body>
 
 </html>

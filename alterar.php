@@ -2,25 +2,20 @@
 include 'conexao.php';
 
 $mensagem = "";
-
 $pdo = conectar();
-
 $cpf = $nome = $sobrenome = $sexo = $dataNascimento = $paisOrigem = $previsaoEstadia = $ciasAereas = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['buscar'])) {
         $cpf = $_POST["cpf"];
-
         $sqlHospede = "SELECT * FROM hospede WHERE cpf = ?";
         $stmtHospede = $pdo->prepare($sqlHospede);
         $stmtHospede->execute([$cpf]);
         $hospede = $stmtHospede->fetch();
-
         $sqlReserva = "SELECT * FROM controle WHERE hospedeCpf = ?";
         $stmtReserva = $pdo->prepare($sqlReserva);
         $stmtReserva->execute([$cpf]);
         $reserva = $stmtReserva->fetch();
-
         if ($hospede) {
             $nome = $hospede["nome"];
             $sobrenome = $hospede["sobrenome"];
@@ -29,7 +24,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $mensagem = "Hóspede não encontrado";
         }
-
         if ($reserva) {
             $paisOrigem = $reserva["paisOrigem"];
             $previsaoEstadia = $reserva["previsaoEstadia"];
@@ -43,23 +37,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $paisOrigem = $_POST["paisOrigem"];
         $previsaoEstadia = $_POST["previsaoEstadia"];
         $ciasAereas = isset($_POST["ciasAereas"]) ? implode(", ", $_POST["ciasAereas"]) : "";
-
         try {
             $sqlHospede = "UPDATE hospede SET nome = ?, sobrenome = ?, dataNascimento = ? WHERE cpf = ?";
             $stmtHospede = $pdo->prepare($sqlHospede);
             $stmtHospede->execute([$nome, $sobrenome, $dataNascimento, $cpf]);
-
             $sqlReserva = "UPDATE controle SET paisOrigem = ?, previsaoEstadia = ?, ciasAereas = ? WHERE hospedeCpf = ?";
             $stmtReserva = $pdo->prepare($sqlReserva);
             $stmtReserva->execute([$paisOrigem, $previsaoEstadia, $ciasAereas, $cpf]);
-
             $mensagem = "Dados alterados com sucesso!";
         } catch (PDOException $e) {
             $mensagem = "Erro ao alterar dados: " . $e->getMessage() . "";
         }
     }
 }
-
 $pdo = encerrar();
 ?>
 
@@ -75,10 +65,13 @@ $pdo = encerrar();
         body {
             background-image: url("img/fundo_excluir.jpg");
         }
+        .form-container{
+            text-align: start;
+        }
     </style>
 </head>
 
-<body class="d-flex justify-content-center align-items-center">
+<body class="d-flex flex-column justify-content-center align-items-center vh-100 text-center">
     <div class="form-container">
         <h2 class="text-center form-title mb-4 mt-4">Alterar Dados</h2>
 
@@ -112,7 +105,6 @@ $pdo = encerrar();
             </div>
 
             <div class="row mb-3">
-                <!-- País de Origem -->
                 <div class="col-md-6">
                     <h5 class="mb-2">País de Origem</h5>
                     <?php
@@ -126,8 +118,6 @@ $pdo = encerrar();
                     }
                     ?>
                 </div>
-
-                <!-- Companhias Aéreas -->
                 <div class="col-md-6">
                     <h5 class="mb-2">Companhias Aéreas Já Utilizadas</h5>
                     <?php
@@ -169,6 +159,5 @@ $pdo = encerrar();
         <?php echo htmlspecialchars($mensagem); ?>
     </div>
 <?php endif; ?>
-
 
 </html>
